@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('texto-backend:server');
 var http = require('http');
+const io = require('../io/io') 
 
 /**
  * Get port from environment and store in Express.
@@ -20,7 +21,13 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
+io.attach(server,{
+  connectionStateRecovery:{},
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+})
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -88,3 +95,4 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+

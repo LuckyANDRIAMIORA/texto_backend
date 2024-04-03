@@ -14,7 +14,35 @@ datasource db {
 }
 
 model User {
-  email String @id
-  username String 
-  password String
+  email           String            @id
+  username        String
+  password        String
+  actif           Boolean
+  Message         Message[]
+  User_discussion User_discussion[]
+}
+
+model Message {
+  message_id    Int        @id @default(autoincrement())
+  discussion    Discussion @relation(fields: [discussion_id], references: [discussion_id])
+  discussion_id String
+  user          User       @relation(fields: [email], references: [email])
+  email         String
+  message_date  DateTime   @default(now()) @db.Timestamptz(6)
+}
+
+model Discussion {
+  discussion_id String            @id
+  users         User_discussion[]
+  messages      Message[]
+}
+
+model User_discussion {
+  user_discussion_id Int        @id @default(autoincrement())
+  discussion         Discussion @relation(fields: [discussion_id], references: [discussion_id])
+  discussion_id      String
+  user               User       @relation(fields: [email], references: [email])
+  email              String
+
+  @@unique([discussion_id, email])
 }
